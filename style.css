@@ -1,0 +1,69 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: rgb(0, 0, 0);
+}
+
+h2 {
+    font-size: 2.3em;
+    margin-bottom: 20px;
+    color: rgb(0, 0, 0);
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.botao {
+    background-color: #005ac2;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.botao:hover {
+    background-color: #006ce7;
+}
+
+.estoque {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.setor {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.setor h2 {
+    font-size: 1.2em;
+    margin: 0 0 10px 0;
+}
+
+.setor p {
+    font-size: 1em;
+    margin: 0;
+    color: black;
+}
