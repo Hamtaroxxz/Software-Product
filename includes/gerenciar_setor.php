@@ -1,6 +1,8 @@
 <?php
+require 'config/database.php';
 
 $setores = $conn->query("SELECT * FROM setores");
+
 ?>
 
 <style>
@@ -97,18 +99,15 @@ button.botao:hover {
 
 </style>
 
-<h2>Inserir Novo Produto</h2>
+<h2>Inserir Novo Setor</h2>
 <form method="POST">
-    <label for="nome">Nome do Produto:</label>
+    <label for="nome">Nome do Setor:</label>
     <input type="text" name="nome" id="nome" required>
+    <button type="submit" class="botao" onclick="inserirSetor()">Inserir Setor</button>
+</form>
 
-    <label for="descricao">Descrição:</label>
-    <textarea name="descricao" id="descricao"></textarea>
-
-    <label for="quantidade">Quantidade:</label>
-    <input type="number" name="quantidade" id="quantidade" required>
-
-    <label for="setor_id">Setor:</label>
+<h2>Excluir Setor</h2>
+<form onsubmit="return excluirSetor();">
     <select name="setor_id" id="setor_id" required>
         <option value="">Selecione um setor</option>
         <?php while ($setor = $setores->fetch_assoc()): ?>
@@ -116,40 +115,65 @@ button.botao:hover {
         <?php endwhile; ?>
     </select>
 
-    <button type="submit" class="botao">Inserir Produto</button>
+    <button type="submit" class="botao" style="background-color: red;">Excluir</button>
 </form>
 
 <script>
-    document.querySelector('form').addEventListener('submit', function(e) {
-        e.preventDefault(); 
 
-        // Captura os valores dos campos do formulário
+    function inserirSetor() {
+
         var nome = document.querySelector('[name="nome"]').value;
-        var descricao = document.querySelector('[name="descricao"]').value;
-        var quantidade = document.querySelector('[name="quantidade"]').value;
-        var setorId = document.querySelector('[name="setor_id"]').value;
 
         var formData = new FormData();
         formData.append('nome', nome);
-        formData.append('descricao', descricao);
-        formData.append('quantidade', quantidade);
-        formData.append('setor_id', setorId);
 
-        fetch('ajax/inserir_produto.php', {
+        fetch('ajax/inserir_setor.php', {
             method: 'POST',
             body: formData
         })
         .then(response => response.text())
         .then(data => {
             alert(data);
-            if(data == "Produto inserido com sucesso!") { 
-                window.location.href = "index.php?pagina=gerenciar";
-            }
+            window.location.href = "index.php?pagina=gerenciar";
         })
         .catch(error => {
             console.error("Erro ao enviar os dados:", error);
-            alert("Houve um erro ao tentar inserir o produto.");
+            alert("Houve um erro ao tentar inserir o setor.");
         });
-    });
-</script>
+    }
 
+    function excluirSetor() {
+        const select = document.getElementById('setor_id');
+        const id = select.value;
+
+        if (!id) {
+            alert("Selecione um setor para excluir.");
+            return false;
+        }
+
+        if (!confirm("Tem certeza que deseja excluir este setor?")) {
+            return false;
+        }
+
+        const formData = new FormData();
+        formData.append('id', id);
+
+        fetch('ajax/excluir_setor.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            window.location.href = "index.php?pagina=gerenciar";
+        })
+        .catch(error => {
+            console.error("Erro ao enviar os dados:", error);
+            alert("Houve um erro ao tentar excluir o setor.");
+        });
+
+        return false;
+    }
+
+   
+</script>

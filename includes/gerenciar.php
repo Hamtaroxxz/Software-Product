@@ -24,18 +24,18 @@ if (!empty($setorFiltro)) {
 <div class="container">
     <div class="topo">
         <form method="GET">
-            <label style='color: black' for="setorFiltro">Filtrar por Setor:</label>
-            <select name="setor_id" id="setorFiltro" class="filtro" onchange="this.form.submit()">
-                <option value="">Todos</option>
-                <?php while ($setor = $setores->fetch_assoc()): ?>
-                    <option value="<?= $setor['id']; ?>" <?= ($setorFiltro == $setor['id']) ? 'selected' : ''; ?>>
-                        <?= htmlspecialchars($setor['nome']); ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
+        <label style="color: black" for="setorFiltro">Filtrar por Setor:</label>
+        <select id="setorFiltro" class="filtro" onchange="filtrarPorSetor(this.value)">
+            <option value="">Todos</option>
+            <?php while ($setor = $setores->fetch_assoc()): ?>
+                <option value="<?= $setor['id']; ?>" <?= ($setorFiltro == $setor['id']) ? 'selected' : ''; ?>>
+                    <?= htmlspecialchars($setor['nome']); ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
         </form>
         <div style="display:flex; justify-content: flex-end; gap: 8px">
-            <button class="botao" onclick="inserirSetor()">Inserir Setor</button>
+            <button class="botao" onclick="inserirSetor()">Gerenciar Setor</button>
             <button class="botao" onclick="inserirProduto()">Inserir Produto</button>
         </div>
 
@@ -63,9 +63,7 @@ if (!empty($setorFiltro)) {
                 <td style="color: black"><?php echo htmlspecialchars($produto['setor']); ?></td>
                 <td class="botoes">
                     <a onclick="editar(<?php echo $produto['id']; ?>)" class="btn editar">Editar</a>
-                    <a href="excluir.php?id=<?php echo $produto['id']; ?>" 
-                       class="btn excluir" 
-                       onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir</a>
+                    <a onclick="excluir(<?php echo $produto['id']; ?>)" class="btn excluir">Excluir</a>
                 </td>
             </tr>
         <?php endwhile; ?>
@@ -84,13 +82,12 @@ if (!empty($setorFiltro)) {
 <script>
 
     function inserirSetor() {
-        window.location.href = "index.php?pagina=inserir_setor";
+        window.location.href = "index.php?pagina=gerenciar_setor";
     }
 
     function inserirProduto() {
         window.location.href = "index.php?pagina=inserir_produto";
     }
-
 
     function editar(id) {
         window.location.href = "index.php?pagina=editar_produto&id=" + id;
@@ -98,7 +95,30 @@ if (!empty($setorFiltro)) {
 
     function excluir(id) {
         if (confirm("Tem certeza que deseja excluir este produto?")) {
-            window.location.href = "excluir_produto.php?id=" + id;
-        }
+        fetch(`ajax/excluir_produto.php?id=${id}`)
+            .then(response => response.text())
+            .then(data => {
+                // Mostra o retorno do PHP (mensagem de sucesso ou erro)
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error("Erro ao excluir o produto:", error);
+                alert("Houve um erro ao excluir o produto.");
+            });
     }
+    }
+
+    function filtrarPorSetor(setorId) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('pagina', 'gerenciar');
+
+    if (setorId) {
+        url.searchParams.set('setor_id', setorId);
+    } else {
+        url.searchParams.delete('setor_id');
+    }
+
+    window.location.href = url.toString();
+}
 </script>
