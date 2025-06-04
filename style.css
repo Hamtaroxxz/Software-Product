@@ -192,7 +192,6 @@ th {
     background-color: #e53935;
 }
 
-/* Para os links, manter a cor padrão ao clicar */
 a:active {
     outline: none;
 }
@@ -203,5 +202,15 @@ a:active {
     display: flex;
     gap: 9px;
     justify-content: center;
+}
+
+.grafico-container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#graficoEstoque {
+    width: 100% !important;
+    height: auto !important;
 }
 
